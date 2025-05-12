@@ -1,0 +1,35 @@
+{
+  "name": "ticket-ninja-desktop",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "dependencies": {
+    "electron": "^29.0.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^24.0.0"
+  },
+  "build": {
+    "appId": "com.ticketninja.app",
+    "productName": "Ticket Ninja",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "app/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "app",
+        "to": "app"
+      }
+    ],
+    "win": {
+      "target": "nsis"
+    }
+  }
+}

@@ -20,16 +20,22 @@ interface Props {
 }
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  // const res = await axios.get('https://hackmd.io/s/how-to-create-book')
+  // 如果設了 SKIP_FETCH，就直接回傳預設文字
+  if (process.env.SKIP_FETCH === 'true') {
+    return {
+      props: {
+        article: '🚧 目前無法載入 HackMD 內容，請確認網路連線後再試一次。',
+      },
+    };
+  }
 
+  // 否則嘗試抓取 HackMD
   const res = await axios.get(
-    'https://hackmd.io/@jzAV4dxpRviFxKd2XnW_9g/S1a1s6Veh',
+    'https://hackmd.io/@jzAV4dxpRviFxKd2XnW_9g/S1a1s6Veh'
   );
 
   const $ = cheerio.load(res.data);
   const doc = $('#doc').html();
-
-  // console.log(doc)
 
   if (!doc) throw new Error('not found doc');
 

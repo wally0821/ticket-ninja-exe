@@ -1,38 +1,37 @@
-name: Build EXE
-run: SKIP_FETCH=true npm run build
-env:
-  SKIP_FETCH: true
+name: Build and Export Next.js App
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '18'
 
       - name: Install dependencies
-        run: |
-          npm install
-          cd app
-          npm install
-          npm run build
-          cd ..
+        run: npm install
 
-      - name: Build Electron App
+      - name: Build app with SKIP_FETCH to avoid HackMD fetch during export
         run: npm run build
+        env:
+          SKIP_FETCH: true
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ticket-ninja-exe
-          path: dist/*.exe
+      - name: Export static pages
+        run: npm run export
+
+      - name: Install pkg for exe packaging
+        run: npm install -g pkg
+
+      - name: Package app to .exe
+        run: |
+          pkg ./server.js --targets node18-win-x64 --output output/ticket-ninja.exe

@@ -1,4 +1,6 @@
 name: Build EXE
+run: SKIP_FETCH=true npm run build
+
 
 on:
   push:
